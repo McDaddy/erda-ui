@@ -39,12 +39,6 @@ export default {
 `);
 
 module.exports = [
-  // {
-  //   name: 'mf_nusi',
-  //   exposes: {
-  //     './all': './app/external/nusi.js',
-  //   },
-  // },
   {
     name: 'mf_share',
     exposes: {

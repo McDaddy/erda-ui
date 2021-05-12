@@ -75,7 +75,6 @@ module.exports = () => {
                 sourceMap: false,
               },
             },
-            'postcss-loader',
             {
               loader: 'sass-loader',
               options: {
@@ -92,7 +91,6 @@ module.exports = () => {
             MiniCssExtractPlugin.loader,
             'thread-loader',
             'css-loader',
-            'postcss-loader',
             {
               loader: 'less-loader',
               options: {
@@ -137,7 +135,7 @@ module.exports = () => {
         'process.env.NODE_ENV': JSON.stringify(nodeEnv),
       }),
       new webpack.ContextReplacementPlugin(
-        /moment[\\\/]locale$/,
+        /moment[\\/]locale$/,
         /(zh-cn)\.js/
       ),
       new ModuleFederationPlugin({

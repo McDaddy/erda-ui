@@ -25,7 +25,7 @@ const css = require('./app/views/css.js');
 const pkg = require('./package.json');
 const { ModuleFederationPlugin } = require('webpack').container;
 const mfConfigs = require('./mf.config');
-
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const packageJson = require('./package.json');
 
 const mainVersion = packageJson.version.slice(0, -2);
@@ -34,9 +34,10 @@ const resolve = pathname => path.resolve(__dirname, pathname);
 
 const { getPath } = require('../utils/resolve');
 
+const smp = new SpeedMeasurePlugin();
+
 module.exports = () => {
   const nodeEnv = process.env.NODE_ENV || 'development';
-  const isSplitMode = process.env.SPLIT_MODULE;
   const isOnline = process.env.DICE_WORKSPACE; // 线上才有的环境变量
   const isProd = nodeEnv === 'production';
   const cpuNum = isProd && isOnline ? 1 : os.cpus().length;
@@ -133,7 +134,6 @@ module.exports = () => {
                 sourceMap: false,
               },
             },
-            'postcss-loader',
             {
               loader: 'sass-loader',
               options: {
@@ -180,7 +180,7 @@ module.exports = () => {
         },
         {
           test: /\.(css)$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          use: [...(isProd ? [MiniCssExtractPlugin.loader] : []), 'css-loader'],
         },
         {
           test: /\.(tsx?|jsx?)$/,
@@ -307,5 +307,5 @@ module.exports = () => {
     },
   };
 
-  return merge(commonConfig, targetConfig);
+  return smp.wrap(merge(commonConfig, targetConfig));
 };

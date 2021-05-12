@@ -14,15 +14,14 @@
 const config = require('./.erda/config');
 const fs = require('fs');
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 const swaggerParserMock = require('swagger-parser-mock');
 const pathToRegexp = require('path-to-regexp');
 const Mock = require('mockjs');
 
 const backendUrl = config.DEV_URL;
-let mockpath = [];
-if (fs.existsSync('./swagger.json')) swaggerParserMock({ spec: require('./swagger.json') }).then((docs) => { mockpath = docs.paths; });
+let mockPath = [];
+if (fs.existsSync('./swagger.json')) swaggerParserMock({ spec: require('./swagger.json') }).then((docs) => { mockPath = docs.paths; });
 
 const redirectPaths = [
   '/microService',
@@ -80,7 +79,7 @@ module.exports = config.wrapWebpack({
       },
       {
         context: redirectPaths,
-        bypass(req, res, proxyOptions) {
+        bypass(req, res) {
           const firstPath = (req.url || '').split('/')[1];
           if (redirectPaths.includes(`/${firstPath}`)) {
             res.redirect(`/-${req.url}`);
@@ -103,12 +102,12 @@ module.exports = config.wrapWebpack({
         // ignorePath: false,
         onProxyRes(proxyRes, req, res) {
           if (proxyRes.statusCode === 404 || proxyRes.statusCode === 503) {
-            Object.keys(mockpath).forEach((mockurl) => {
-              mockpath[mockurl].mockUrl = mockurl.replace(/{/g, ':').replace(/}/g, '');
-              if (pathToRegexp(mockpath[mockurl].mockUrl).exec(req.path)) {
-                const responses = mockpath[mockurl][req.method.toLowerCase()].responses[200].example && JSON.parse(mockpath[mockurl][req.method.toLowerCase()].responses[200].example);
+            Object.keys(mockPath).forEach((mockUrl) => {
+              mockPath[mockUrl].mockUrl = mockUrl.replace(/{/g, ':').replace(/}/g, '');
+              if (pathToRegexp(mockPath[mockUrl].mockUrl).exec(req.path)) {
+                const responses = mockPath[mockUrl][req.method.toLowerCase()].responses[200].example && JSON.parse(mockPath[mockUrl][req.method.toLowerCase()].responses[200].example);
                 res.json(Mock.mock(responses));
-                console.log(`mockto: ${req.method} ${mockurl}`);
+                console.log(`mock to: ${req.method} ${mockUrl}`);
               }
             });
           }
@@ -125,11 +124,6 @@ module.exports = config.wrapWebpack({
   plugins: [
     new WebpackBuildNotifierPlugin({
       title: 'Erda UI Development',
-      // suppressSuccess: true,
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'style/[name].css',
-      ignoreOrder: true,
     }),
   ],
   optimization: {

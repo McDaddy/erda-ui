@@ -1,0 +1,41 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.177.0/containers/typescript-node
+{
+	"name": "Erda UI vscode Container",
+	"build": {
+		"dockerfile": "Dockerfile",
+	},
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"dbaeumer.vscode-eslint",
+		"eamodio.gitlens",
+		"streetsidesoftware.code-spell-checker",
+		"formulahendry.auto-close-tag",
+		"formulahendry.auto-rename-tag",
+		"coenraads.bracket-pair-colorizer-2",
+		"msjsdiag.debugger-for-chrome",
+		"mikestead.dotenv",
+		"vincaslt.highlight-matching-tag",
+		"miguelsolorio.fluent-icons",
+		"shanoor.vscode-nginx",
+		"bradlc.vscode-tailwindcss",
+		"gruntfuggly.todo-tree",
+		"ms-vscode.vscode-typescript-tslint-plugin",
+		"chakrounanas.turbo-console-log",
+		"visualstudioexptteam.vscodeintellicode"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash /scripts/install-dev-tools.sh",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "node"
+}
