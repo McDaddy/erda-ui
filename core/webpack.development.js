@@ -33,8 +33,6 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, 'public'),
-    host: frontUrl,
-    port: 5000,
     historyApiFallback: true,
     https: {
       key: fs.readFileSync('../cert/dev/server.key'),

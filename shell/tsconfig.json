@@ -292,7 +292,9 @@
     "../core/node_modules/cube-state/dist/*",
     "../shell/app/**/types/*",
     "../shell/node_modules/@types/*",
-    "../core/app/**/types/*"
+    "../core/app/**/types/*",
+    "./node_modules/@types/*",
+    "../node_modules/@types/*"
   ],
   "exclude": [
     "node_modules",
