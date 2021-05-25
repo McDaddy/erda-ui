@@ -1,0 +1,9 @@
+packages:
+  # all packages in subdirs of packages/ and components/
+  - packages/core
+  - packages/shell
+  - packages/scheduler
+  - packages/cli
+  - packages/modules/market
+  # exclude packages that are inside test directories
+  - '!**/test/**'
