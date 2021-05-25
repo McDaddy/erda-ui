@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-12
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && mkdir /commandhistory \
     && touch /commandhistory/.bash_history \
-    && chown -R $USERNAME /commandhistory \
+    # && chown -R $USERNAME /commandhistory \
     && echo $SNIPPET >> "/home/$USERNAME/.bashrc"
 
 # [Optional] Uncomment if you want to install an additional version of node using nvm

@@ -112,6 +112,13 @@ module.exports = config.wrapWebpack({
             });
           }
         },
+        bypass: (req, res) => {
+          if (req.headers && req.headers.referer) {
+            url = new URL(req.headers.referer);
+            url.host = 'dice.dev.terminus.io';
+            req.headers.referer = url.href;
+          }
+        },
       },
     ],
   },

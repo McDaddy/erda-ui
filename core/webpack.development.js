@@ -16,6 +16,7 @@ const path = require('path');
 const root = path.resolve(process.cwd(), '..');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { parsed: config } = require('dotenv').config({ path: `${root}/.env` })
+const erdaConfig = require('./.erda/config');
 
 const backendUrl = config.DEV_HOST;
 const frontUrl = `local-core.${backendUrl.replace(/http(s?):\/\//, '')}`; // local与对应环境根域名一致
@@ -25,7 +26,7 @@ add config in host file:\n
 127.0.0.1  ${frontUrl}
 `);
 
-module.exports = {
+module.exports = erdaConfig.wrapWebpack({
   mode: 'development',
   watchOptions: {
     // aggregateTimeout: 500,
@@ -52,4 +53,4 @@ module.exports = {
       ignoreOrder: true,
     }),
   ],
-};
+});
