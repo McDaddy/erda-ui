@@ -20,6 +20,12 @@ import compression from 'compression';
 import { log, logWarn, getDirectories, getEnv, getHttpsOptions } from './util';
 import { createProxyService } from './proxy';
 import { guardMiddleware } from './middlewares/guard.middleware';
+import webpack from '../../shell/node_modules/webpack';
+
+const webpackConfig = require('../../shell/webpack.config.js');
+const config = webpackConfig();
+const compiler = webpack(config);
+// console.log('🚀 ~ file: main.ts ~ line 28 ~ ss', compiler);
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -45,6 +51,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions: isProd ? undefined : getHttpsOptions(),
   });
+
   app.use(helmet({ contentSecurityPolicy: false, referrerPolicy: false }));
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalFilters(new NotFoundExceptionFilter());
@@ -52,7 +59,25 @@ async function bootstrap() {
     app.use(compression()); // gzip
   }
   app.use(guardMiddleware); // must create global guard middleware here, otherwise the proxy middleware will ignore the guard
+
   const wsProxy = createProxyService(app);
+
+  if (!isProd) {
+    app.use(
+      require('webpack-dev-middleware')(compiler, {
+        // noInfo: true,
+        publicPath: config.output.publicPath,
+        writeToDisk: true,
+      }),
+    );
+    app.use(
+      require(`webpack-hot-middleware`)(compiler, {
+        log: false,
+        path: `/__webpack_hmr`,
+        heartbeat: 2000,
+      }),
+    );
+  }
 
   const server = await app.listen(isProd ? 80 : SCHEDULER_PORT);
   server.on('upgrade', wsProxy.upgrade);

@@ -12,7 +12,9 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 const path = require('path');
+const webpack = require('webpack');
 const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -23,19 +25,26 @@ module.exports = {
     filename: 'scripts/[name].js',
     chunkFilename: 'scripts/[id].chunk.js',
   },
-  watchOptions: {
-    aggregateTimeout: 500,
-    ignored: ['node_modules', 'public', 'test', 'docs', 'tmp'],
-    poll: 5000,
-  },
+  // watchOptions: {
+  //   aggregateTimeout: 500,
+  //   ignored: ['node_modules', 'public', 'test', 'docs', 'tmp'],
+  //   poll: 5000,
+  // },
   stats: { children: false },
   plugins: [
     new WebpackBuildNotifierPlugin({
       title: 'Erda UI Development',
       // suppressSuccess: true,
     }),
+    new webpack.HotModuleReplacementPlugin(),
+    new ReactRefreshWebpackPlugin({
+      overlay: {
+        sockIntegration: 'whm',
+      },
+    }),
   ],
   optimization: {
     minimize: false,
+    runtimeChunk: 'single',
   },
 };

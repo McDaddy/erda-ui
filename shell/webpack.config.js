@@ -73,7 +73,7 @@ module.exports = () => {
   const commonConfig = {
     parallelism: cpuNum,
     entry: {
-      app: ['./app'],
+      app: ['webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true', './app'],
     },
     target: isProd ? 'browserslist' : 'web',
     resolve: {
@@ -125,6 +125,7 @@ module.exports = () => {
         events: require.resolve('events'),
       },
     },
+    context: path.resolve(__dirname),
     cache: {
       type: 'filesystem',
     },
@@ -188,8 +189,12 @@ module.exports = () => {
             {
               loader: 'babel-loader', // TODO tree sharking is not available in MF, will handle it later
               options: {
-                presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
-                plugins: ['jsx-control-statements'],
+                presets: [
+                  '@babel/preset-env',
+                  ['@babel/preset-react', { development: !isProd, runtime: 'automatic' }],
+                  '@babel/preset-typescript',
+                ],
+                plugins: ['jsx-control-statements', !isProd && 'react-refresh/babel'].filter(Boolean),
               },
             },
           ],

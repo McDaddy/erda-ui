@@ -40,7 +40,7 @@ MODULES.split(',')
 console.log('================ remotes: =================\n', remotes);
 
 fs.writeFileSync(
-  './app/mf-modules.js',
+  path.resolve(__dirname, './app/mf-modules.js'),
   `
 export default {
   ${entries.join('\n')}
@@ -52,16 +52,19 @@ module.exports = [
   {
     name: 'mf_share',
     exposes: {
-      './layout/stores/layout': './app/layout/stores/layout.ts',
-      './layout/entry': './app/layout/entry.js',
-      './layout/error-page': './app/layout/common/error-page.tsx',
-      './common/utils': './app/common/utils/index.ts',
-      './common/all': './app/common',
-      './cmp/pages/cluster-manage/operation-history': './app/modules/cmp/pages/cluster-manage/operation-history',
-      './org/pages/safety': './app/modules/org/pages/safety',
-      './user/store': './app/user/stores/index.ts',
-      './erda-icon': '@icon-park/react',
-      './org-home/stores/org': './app/org-home/stores/org.tsx',
+      './layout/stores/layout': path.resolve(__dirname, './app/layout/stores/layout.ts'),
+      './layout/entry': path.resolve(__dirname, './app/layout/entry.js'),
+      './layout/error-page': path.resolve(__dirname, './app/layout/common/error-page.tsx'),
+      './common/utils': path.resolve(__dirname, './app/common/utils/index.ts'),
+      './common/all': path.resolve(__dirname, './app/common'),
+      './cmp/pages/cluster-manage/operation-history': path.resolve(
+        __dirname,
+        './app/modules/cmp/pages/cluster-manage/operation-history',
+      ),
+      './org/pages/safety': path.resolve(__dirname, './app/modules/org/pages/safety'),
+      './user/store': path.resolve(__dirname, './app/user/stores/index.ts'),
+      './erda-icon': path.resolve(__dirname, './node_modules/@icon-park/react'),
+      './org-home/stores/org': path.resolve(__dirname, './app/org-home/stores/org.tsx'),
     },
   },
   {
